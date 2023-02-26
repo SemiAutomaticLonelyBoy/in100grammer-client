@@ -1,25 +1,7 @@
 import React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import {UserProps} from "../types/types";
 
-interface UserProps {
-    id: string;
-    username: string;
-    fullName: string;
-    description: string;
-    followers: number;
-    following: number;
-    postsAmount:number;
-    lastPost: Date;
-    phone:string;
-    email:string;
-    site:string;
-    potentiallyBusiness: boolean;
-    business:true;
-    businessCategory: string;
-    countryCode:string;
-    countryReason: string;
-
-}
 
 const rows: UserProps[] = [
     { id: '1', username: 'Snow', fullName: 'Jon', description: 'Jon',followers: 123, following: 123, postsAmount: 123, lastPost: new Date(),
@@ -46,12 +28,16 @@ const columns: GridColDef[] = [
     { field: 'countryReason', headerName: 'countryReason', width: 100 },
 
 ];
-const Table = () => {
+interface TableProps {
+    users: UserProps[];
+}
+const Table:React.FC<TableProps> = (users) => {
+    console.log(users);
     return (
         <div>
-            <div style={{ height: 400, width: '100%' }}>
+            <div style={{ height: '500px', width: '100vw', padding: '30px'}}>
                 <DataGrid
-                    rows={rows}
+                    rows={users.users}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
