@@ -1,30 +1,51 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import Input from "./components/Input/Input";
+import Input from "./components/Input";
 import {Container} from "@mui/material";
 import Table from "./components/Table";
 import axios from "axios";
-import {UserProps} from "./types/types";
+import {UserProps, ValueProps} from "./types/types";
+import {DefaultApi} from "./services/api";
+import UserFilter from "./components/UserFilter";
+
 
 const App = () => {
-    const [value, setValue] = useState<string>("");
-    const [users, setUsers] = useState<UserProps[]>([{ id: '1', username: 'Snow', fullName: 'Jon', description: 'Jon',followers: 123, following: 123, postsAmount: 123, lastPost: new Date(),
-        phone: '123', email: '123', site: '123', potentiallyBusiness: true, business: true, businessCategory: '123', countryCode: '123', countryReason: '123'},]);
+    const defaultApi = new DefaultApi();
+    const [value, setValue] = useState<ValueProps>({
+        query: '',
+        isBusiness: false,
+        isPhone: false,
+        isEmail: false,
+        isSite: false,
+        userCountry: {code: '', label: '', phone: ''},
+        isCountry: false,
+        filterKey: '',
+        filterValue: '',
+        maxFollowers: "",
+        minFollowers: "",
+    });
 
-    async function getUsers() {
+
+    async function postUser() {
         try {
-            const response = await axios.get('http://localhost:3000/enqueue/' + value);
+            const response = await defaultApi.appControllerEnqueue({id: value.query});
             console.log(response.data);
-            setUsers(response.data);
+
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+
+    const clickHandler = () => {
+        postUser();
+    };
+
 
     return (
         <Container sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
-            <Input value={value} setValue={setValue}/>
-            <Table users={users}/>
+            <Input value={value} setValue={setValue} clickHandler={clickHandler}/>
+
+            <Table value={value}/>
         </Container>
     );
 };
